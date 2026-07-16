@@ -14,11 +14,11 @@ class CreateFollowersTable extends Migration
     public function up()
     {
         Schema::create('followers', function (Blueprint $table) {
-            // $table->increments('id');
-            // $table->string('follower_id');
-            // $table->string('follower_name',100);
-            // $table->integer('following_id');
-            // $table->timestamps();
+            $table->increments('id');
+            $table->string('follower_id');
+            $table->string('follower_name',100);
+            $table->integer('following_id');
+            $table->timestamps();
         });
     }
 
