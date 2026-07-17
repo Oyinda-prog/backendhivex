@@ -11,8 +11,8 @@ class CreateStudentsTable extends Migration
      *
      * @return void
      */
-    public function up()
-    {
+    //public function up()
+    //{
         // Schema::create('students', function (Blueprint $table) {
         //     $table->increments('student_id');
         //     $table->string('fullname');
@@ -20,15 +20,30 @@ class CreateStudentsTable extends Migration
         //     $table->string('email',100)->unique();
         //     $table->timestamps();
         // });
-    }
+   // }
 
     /**
      * Reverse the migrations.
      *
      * @return void
      */
-    public function down()
-    {
-        Schema::dropIfExists('students');
-    }
+    //public function down()
+   // {
+      //  Schema::dropIfExists('students');
+    //}
+    public function up()
+{
+    Schema::create('students_table', function (Blueprint $table) {
+        $table->increments('student_id');
+        $table->string('fullname');
+        $table->string('email', 100)->unique();
+        $table->string('password');
+        $table->timestamps();
+    });
+}
+
+public function down()
+{
+    Schema::dropIfExists('students_table');
+}
 }
