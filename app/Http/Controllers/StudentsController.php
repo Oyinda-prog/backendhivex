@@ -69,23 +69,23 @@ public function allstudentsnotes(){
     // $student=Students::with('keepnotes')->get();
     // $student=Students::with('keepnotes')->find(1);
 //   $note=keepnote::with('student')->get();
-//   for ($i=0; $i <$note ; $i++) { 
+//   for ($i=0; $i <$note ; $i++) {
 //     return $note[$i]['student'];
 //   }
     // return $note[0]->student;
 }
 
     public function signup(){
-      
+
     return view('students.signup');
-    
+
 }
 
 
 // return json_encode([
 //             'status'=>'201',
 //             'msg'=>'Signup connected'
-//         ]); 
+//         ]);
 
 public function createbio(Request $req){
 $update=Students::where('student_id',$req->student_id)->update([
@@ -142,7 +142,7 @@ public function createstudent(Request $req){
         return json_encode([
           'status'=>200,
           'msg'=>$validation->errors()->first(),
-        
+
         ]);
     // return view('students.signup')->with('errors',$validation->errors());
   }
@@ -174,7 +174,7 @@ public function createstudent(Request $req){
     // $user=new Students;
     // return 'Saved';
   }
-    
+
 }
 public function login(){
     return view('students.login');
@@ -185,7 +185,7 @@ public function createlogin(Request $req){
         'email'=>'required|email',
         'password'=>'required|min:3',
      ]);
-   
+
     if($validation->fails()){
         return json_encode([
             'status'=>204,
@@ -197,10 +197,10 @@ public function createlogin(Request $req){
        $student=Students::where('email',$req->email)->first();
 
        if($student && Hash::check($req->password,$student->password)){
-        
+
 // return redirect()->route('dashboard')->with('msg', 'Login successful!');
 
-        session(['student'=>$student]);
+        // session(['student'=>$student]);
             //   $req->session()->put('student', $student->student_id);
         return json_encode([
             'status'=>206,
@@ -241,7 +241,7 @@ public function alluser(Request $req)
 
 
 
-    
+
     // $currentUserId = $req->student_id;
 
     // $allstudents = Students::where('student_id', '!=', $currentUserId)
@@ -250,8 +250,8 @@ public function alluser(Request $req)
     //             //   ->where('status', 1);
     //     }])
     //     ->get();
-    
- 
+
+
     // $currentUserId = $req->student_id;
 
     // $students = Students::where('student_id', '!=', $currentUserId)->get();
@@ -314,19 +314,19 @@ public function allusers(Request $req)
 {
     $currentUserId = $req->student_id;
 
-    
+
     $otherStudents = Students::where('student_id', '!=', $currentUserId)->get();
 
-    
+
     $follows = Followers::where('follower_id', $currentUserId)->get();
 
-    
+
     $followStatusMap = [];
     foreach ($follows as $f) {
         $followStatusMap[$f->following_id] = $f->status;
     }
 
-    
+
     $studentsWithStatus = $otherStudents->map(function ($student) use ($followStatusMap) {
         $student->follow_status = $followStatusMap[$student->student_id] ?? 'unfollow';
         return $student;
@@ -342,7 +342,7 @@ public function allusers(Request $req)
 public function allfriends(Request $req)
 {
     $currentUserId = $req->userid;
-    
+
     $followers = Followers::where('following_id', $currentUserId)->with(['student'])->get();
 
     return response()->json([
@@ -364,7 +364,7 @@ return response()->json([
             'status' => '200',
             'msg'=>'User found',
             'token'=>$student->emailverify
-           
+
         ]);
         }
         else{
@@ -380,7 +380,7 @@ return response()->json([
             'status' => '501',
             'msg'=>'User does not exist. Please enter a valid email'
             // 'friends' => $followers
-        ]); 
+        ]);
     }
 }
 public function getcurrentstudent(Request $req){
@@ -389,14 +389,14 @@ public function getcurrentstudent(Request $req){
         return response()->json([
             'status' => 200,
             'student'=>$student
-            
+
         ]);
      }
      else{
         return response()->json([
             'status' => 201,
             'msg'=>'Not found'
-            
+
         ]);
      }
 }
@@ -422,8 +422,8 @@ public function passwordupdate(Request $req){
  return response()->json([
             'status' => '504',
             'msg'=>'User does not exist. Please enter a valid email'
-            
-        ]); 
+
+        ]);
       }
 
 }
@@ -436,12 +436,12 @@ public function studentprofilepicture(Request $req){
         $profilepicture=Students::where('student_id',$req->student_id)->update([
             'profilepicture'=>$newname
         ]);
-        
+
         if($profilepicture){
          return json_encode([
             'status'=>'200',
             'msg'=>'Profile picture uploaded successfully'
-        ]);   
+        ]);
         }
         else{
             return json_encode([
@@ -449,7 +449,7 @@ public function studentprofilepicture(Request $req){
             'msg'=>'Something went wrong, try again!'
         ]);
         }
-    
+
         }
         else{
             return json_encode('failed to move');
@@ -472,14 +472,14 @@ public function deletestudent(Request $req){
         return redirect('/login');
     }
     else{
-        return view('students.dashboard'); 
+        return view('students.dashboard');
     }
 // return $req->student_id;
 }
 public function editstudent($id){
     $student=Students::where('student_id',$id)->first();
     if($student){
-        return view('students.studentedit')->with('student',$student); 
+        return view('students.studentedit')->with('student',$student);
     }
     else{
         // $msg='no student found';
@@ -500,7 +500,7 @@ public function forgot(Request $request){
     if($student){
 session(['id'=>$student->student_id]);
    return redirect('/forgotpassword');
-//    
+//
     }
     else{
         return view('students.forgot')->with('msg',$msg);
@@ -509,10 +509,10 @@ session(['id'=>$student->student_id]);
 }
 public function forgotpassword(){
     $id=session('id');
-    
+
 return view('students.verifypassword',[
     'studentid'=>$id,
-    
+
 ]);
 }
 public function verifypassword(Request $request){
@@ -528,7 +528,7 @@ public function verifypassword(Request $request){
    return 'updated';
         }
         else{
-           return 'failed to update'; 
+           return 'failed to update';
         }
 
 
@@ -555,7 +555,7 @@ public function notestudent($id){
 }
 public function dashboards(Request $request){
  $studentId =$request->student_id;;
-//     
+//
 
     return response()->json([
         'message' => 'Welcome!',
