@@ -23,12 +23,17 @@ RUN a2enmod rewrite
 # Change Apache root to Laravel public folder
 RUN sed -i 's|DocumentRoot /var/www/html|DocumentRoot /var/www/html/public|' /etc/apache2/sites-available/000-default.conf
 
-# Add Laravel permissions
-RUN echo '<Directory /var/www/html/public>\n\
-    AllowOverride All\n\
-    Require all granted\n\
+# Allow Laravel .htaccess
+RUN echo '<Directory /var/www/html/public>
+    AllowOverride All
+    Require all granted
 </Directory>' >> /etc/apache2/apache2.conf
+
+# Copy startup script
+COPY start.sh /start.sh
+
+RUN chmod +x /start.sh
 
 EXPOSE 80
 
-CMD ["apache2-foreground"]
+CMD ["/start.sh"]
