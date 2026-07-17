@@ -38,6 +38,7 @@ class CreateStudentsTable extends Migration
         $table->string('fullname');
         $table->string('email', 100)->unique();
         $table->string('password');
+        $table->string('phonenumber');
         $table->timestamps();
     });
 }

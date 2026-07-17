@@ -10,7 +10,7 @@ class Students extends Model
 {
     use HasFactory;
     protected $fillable=[
-        'fullname','email','password'
+        'fullname','email','password', 'phonenumber'
     ];
 //     public function setPasswordAttribute($value)
 // {
@@ -19,8 +19,8 @@ class Students extends Model
 
     protected $primaryKey='student_id';
     protected $table='students_table';
-    
- 
+
+
     public function keepnotes(){
         return $this->hasMany(keepnote::class,'student_id');
     }
@@ -33,5 +33,5 @@ class Students extends Model
     // public function comments(){
     //     return $this->hasMany(Comments::class,'student_id');
     // }
-    
+
 }
