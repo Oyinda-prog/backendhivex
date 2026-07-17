@@ -1,4 +1,4 @@
-@extends('Todos.index')
+@extends('todos.index')
 
 @section('content')
     <div class="container">
@@ -23,12 +23,11 @@
 
 <div class="col-3">{{$todo->title}}</div>
   <div class="col-3">{{$todo->description}}</div>
-  
+
   <div class="col-3"><a href=""><button class="btn btn-success">view</button></a></div>
   <div class="col-3"><img src="" alt=""></div>
- 
+
   @endforeach
     </div>
-    </div>  
+    </div>
 @endsection
- 
