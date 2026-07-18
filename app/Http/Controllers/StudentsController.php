@@ -118,9 +118,9 @@ public function createstudent(Request $req){
   }
 
 }
-public function login(){
-    return view('students.login');
-}
+// public function login(){
+//     return view('students.login');
+// }
 
 public function createlogin(Request $req){
     $validation=Validator::make($req->all(),[
@@ -145,7 +145,7 @@ public function createlogin(Request $req){
         // session(['student'=>$student]);
             //   $req->session()->put('student', $student->student_id);
         return json_encode([
-            'status'=>206,
+            'status'=>true,
             'msg'=>'User found',
             // 'student'=>$student,
             'userid'=>$student->student_id,
@@ -453,11 +453,16 @@ public function studentprofilepicture(Request $request)
         ], 200);
 
     } catch (\Exception $e) {
+         return response()->json([
+        'message' => $e->getMessage(),
+        'file' => $e->getFile(),
+        'line' => $e->getLine(),
+    ], 500);
 
-        return response()->json([
-            'status' => false,
-            'message' => $e->getMessage()
-        ], 500);
+        // return response()->json([
+        //     'status' => false,
+        //     'message' => $e->getMessage()
+        // ], 500);
 
     }
 }
