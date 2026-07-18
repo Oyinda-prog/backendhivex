@@ -108,19 +108,16 @@ public function createstudent(Request $req){
        if($store){
         return json_encode([
             'status'=>'201',
-            'msg'=>'Saves successfully'
+            'msg'=>'Created successfully'
         ]);
         // return redirect('/login');
        }
     }
-    // $user=new Students;
-    // return 'Saved';
+
   }
 
 }
-// public function login(){
-//     return view('students.login');
-// }
+
 
 public function createlogin(Request $req){
     $validation=Validator::make($req->all(),[
@@ -341,7 +338,7 @@ public function studentprofilepicture(Request $request)
                     'width' => 300,
                     'height' => 300,
                     'crop' => 'fill',
-                    'gravity' => 'face',
+                    'gravity' => 'auto',
                     'quality' => 'auto'
                 ]
             ]
