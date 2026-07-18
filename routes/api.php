@@ -43,7 +43,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::post('/allfriends',[PostController::class,'allfriends']);
 Route::post('/signup',[PersonController::class,'signup']);
 Route::post('/createstudent',[StudentsController::class,'createstudent']);
-Route::post('/getcurrentstudent',[StudentsController::class,'getcurrentstudent']);
+Route::get('/getcurrentstudent/{id}',[StudentsController::class,'getcurrentstudent']);
 Route::get('/allposts',[PostController::class,'allposts']);
 Route::post('/createlogin',[StudentsController::class,'createlogin']);
 Route::post('/createbio',[StudentsController::class,'createbio']);
@@ -72,5 +72,5 @@ Route::post('/unlike',[LikesController::class,'unlike']);
   Route::post('/getinvite',[GroupPostInvite::class,'getinvite']);
   Route::post('/acceptinvite',[GroupPostInvite::class,'acceptinvite']);
   Route::post('/getallgroups',[GroupController::class,'getallgroups']);
-  
+
 

@@ -314,9 +314,9 @@ return response()->json([
         ]);
     }
 }
-public function getcurrentstudent(Request $req)
+public function getcurrentstudent(int $id)
 {
-    $student=Students::find($req->id);
+    $student=Students::find($id);
     if(!$student){
         return response()->json([
             'status' => false,
@@ -327,7 +327,7 @@ public function getcurrentstudent(Request $req)
 
     return response()->json([
         'status' => true,
-        'msg'=>$student
+        'student'=>$student
 
     ], 200);
 
