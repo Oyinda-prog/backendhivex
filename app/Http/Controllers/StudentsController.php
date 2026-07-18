@@ -155,117 +155,35 @@ public function createlogin(Request $req){
        }
     }
 }
-// public function allusers(Request $req){
-//     $allstudents=Students::whereNotIn('student_id',[$req->student_id])->with(['followers'])->get();
-//     return json_encode([
-//             'status'=>'200',
-//             'allstudents'=>$allstudents
-//         ]);
-// }
-
-public function alluser(Request $req)
-{
 
 
-
-
-
-
-
-
-    // $currentUserId = $req->student_id;
-
-    // $allstudents = Students::where('student_id', '!=', $currentUserId)
-    //     ->withCount(['followers as is_following' => function ($query) use ($currentUserId) {
-    //         $query->where('followers.following_id', $currentUserId);
-    //             //   ->where('status', 1);
-    //     }])
-    //     ->get();
-
-
-    // $currentUserId = $req->student_id;
-
-    // $students = Students::where('student_id', '!=', $currentUserId)->get();
- //where('follower_id', $student->student_id)
-    // Loop through each student and check if they follow the current user
-    // $isFollowing=[];
-    // $studentsWithStatus = $students->map(function ($student) use ($currentUserId) {
-        // $isFollowing = Followers::where('follower_id', $currentUserId)
-            // ->where('following_id', $currentUserId)
-            // ->where('status', 1)
-            // ->exists();
-
-    //  $student->follow_status = $isFollowing ? 'follow' : 'unfollow';
-    // //    return $student;
-    //     return response()->json(
-    //         ['checkfollow'=>$isFollowing]
-    //     );
-    // });
-
-    // return response()->json([
-    //     'status' => '200',
-    //     'allstudents' => $studentsWithStatus,
-    //     'student'=>$students,
-    //     'foll'=>$isFollowing
-    // ]);
-
-
-
-    // return response()->json([
-    //     'status' => '200',
-    //     'allstudents' => $allstudents
-    // ]);
-}
-
-
-// public function allusers(Request $req)
-// {
-//     $currentUserId = $req->student_id;
-
-//     // Get all users the current user is following
-//     $followingList = Followers::where('follower_id', $currentUserId)
-//         ->with('following') // eager load the following user data
-//         ->get()
-//         ->map(function ($follower) {
-//             return [
-//                 'student_id' => $follower->following->student_id,
-//                 'fullname' => $follower->following->fullname,
-//                 'email' => $follower->following->email,
-//                 'profilepicture' => $follower->following->profilepicture,
-//                 'phonenumber' => $follower->following->phonenumber,
-//             ];
-//         });
-
-//     return response()->json([
-//         'status' => '200',
-//         'following' => $followingList
-//     ]);
-// }
 public function allusers(Request $req)
 {
     $currentUserId = $req->student_id;
 
-
+    // Get every student except the logged-in student
     $otherStudents = Students::where('student_id', '!=', $currentUserId)->get();
 
-
+    // Get everyone the current user is following
     $follows = Followers::where('follower_id', $currentUserId)->get();
 
+    $followingIds = [];
 
-    $followStatusMap = [];
-    foreach ($follows as $f) {
-        $followStatusMap[$f->following_id] = $f->status;
+    foreach ($follows as $follow) {
+        $followingIds[$follow->following_id] = true;
     }
 
+    // Add is_following to each student
+    $students = $otherStudents->map(function ($student) use ($followingIds) {
 
-    $studentsWithStatus = $otherStudents->map(function ($student) use ($followStatusMap) {
-        $student->follow_status = $followStatusMap[$student->student_id] ?? 'unfollow';
+        $student->is_following = isset($followingIds[$student->student_id]);
+
         return $student;
     });
 
     return response()->json([
-        'status' => '200',
-        'students' => $studentsWithStatus
+        'status' => true,
+        'students' => $students
     ]);
 }
 

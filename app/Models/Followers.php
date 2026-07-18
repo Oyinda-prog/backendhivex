@@ -11,13 +11,20 @@ class Followers extends Model
     protected $table='followers';
     protected $primaryKey='id';
 
+    protected $fillable = [
+        'follower_id',
+        'following_id',
+    ];
+
     public function student(){
         return $this->belongsTo(Students::class,'follower_id');
     }
+
     public function post(){
         return $this->belongsToMany(Posts::class,'follower_id');
     }
-      public function follower()
+
+    public function follower()
     {
         return $this->belongsTo(Students::class, 'follower_id');
     }
