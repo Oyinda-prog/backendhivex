@@ -125,7 +125,7 @@ public function createstudent(Request $req){
 public function createlogin(Request $req){
     $validation=Validator::make($req->all(),[
         'email'=>'required|email',
-        'password'=>'required|min:3',
+        'password'=>'required',
      ]);
 
     if($validation->fails()){
@@ -139,23 +139,12 @@ public function createlogin(Request $req){
        $student=Students::where('email',$req->email)->first();
 
        if($student && Hash::check($req->password,$student->password)){
-
-// return redirect()->route('dashboard')->with('msg', 'Login successful!');
-
-        // session(['student'=>$student]);
-            //   $req->session()->put('student', $student->student_id);
-        return json_encode([
+          return json_encode([
             'status'=>true,
             'msg'=>'User found',
-            // 'student'=>$student,
-            'userid'=>$student->student_id,
-            'profilepicture'=>$student->profilepicture,
-            'fullname'=>$student->fullname,
-            'phonenumber'=>$student->phonenumber
-        ]);
-//         session(['student' => $student]);
+            'student'=>$student
 
-// return redirect('/dashboard');
+        ]);
        }
        else{
         return json_encode([
