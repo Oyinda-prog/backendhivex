@@ -1,49 +1,6 @@
 <?php
-// use Illuminate\Http\Request;
-// use Illuminate\Support\Facades\Auth;
-
-// Route::post('/login', function (Request $request) {
-//     $credentials = $request->only('email', 'password');
-
-//     if (Auth::attempt($credentials)) {
-//         $request->session()->regenerate();
-
-//         return response()->json(['message' => 'Logged in']);
-//     }
-
-//     return response()->json(['message' => 'Invalid credentials'], 401);
-// });
-
-// namespace App\Http\Middleware;
-
-// use Closure;
-// use Illuminate\Http\Request;
-
-// class StudentAuth
-// {
-//     public function handle(Request $request, Closure $next)
-//     {
-//         if (!$request->session()->has('student')) {
-//             return response()->json(['message' => 'Unauthenticated.'], 401);
-//         }
-
-//         return $next($request);
-//     }
-// }
-
-// Route::middleware('studentauth')->get('/dashboard-data', function () {
-//     $studentId = session('student');
-//     $student = App\Models\Students::find($studentId);
-
-//     return response()->json([
-//         'message' => 'Welcome!',
-//         'user' => $student,
-//     ]);
-// });
-
-
 namespace App\Http\Controllers;
-
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 use App\Models\Followers;
 use App\Models\keepnote;
 use App\Models\Students;
@@ -56,23 +13,13 @@ use Illuminate\Support\Facades\Validator;
 class StudentsController extends Controller
 {
 public function allstudentsnotes(){
-    // $students=Students::find(1);
-    // return $students->keepnotes;
-    // $student=Students::with('keepnotes')->find(2);
+
     $note=keepnote::with('student')->get();
-    // return $note->student;
-    // return $student;
+
     return view('students.allstudents',[
         'students'=>$note
     ]);
-    // return $student;
-    // $student=Students::with('keepnotes')->get();
-    // $student=Students::with('keepnotes')->find(1);
-//   $note=keepnote::with('student')->get();
-//   for ($i=0; $i <$note ; $i++) {
-//     return $note[$i]['student'];
-//   }
-    // return $note[0]->student;
+
 }
 
     public function signup(){
@@ -81,11 +28,6 @@ public function allstudentsnotes(){
 
 }
 
-
-// return json_encode([
-//             'status'=>'201',
-//             'msg'=>'Signup connected'
-//         ]);
 
 public function createbio(Request $req){
 $update=Students::where('student_id',$req->student_id)->update([
@@ -427,35 +369,97 @@ public function passwordupdate(Request $req){
       }
 
 }
-public function studentprofilepicture(Request $req){
-    if($req->hasFile('image') && $req->student_id){
 
-        $newname=time().$req->file('image')->getClientOriginalName();
-        $move=$req->file('image')->move(public_path('profilepictures'),$newname);
-        if($move){
-        $profilepicture=Students::where('student_id',$req->student_id)->update([
-            'profilepicture'=>$newname
-        ]);
+// public function studentprofilepicture(Request $req){
+//     if($req->hasFile('image') && $req->student_id){
 
-        if($profilepicture){
-         return json_encode([
-            'status'=>'200',
-            'msg'=>'Profile picture uploaded successfully'
-        ]);
-        }
-        else{
-            return json_encode([
-            'status'=>'201',
-            'msg'=>'Something went wrong, try again!'
-        ]);
-        }
+//         $newname=time().$req->file('image')->getClientOriginalName();
+//         $move=$req->file('image')->move(public_path('profilepictures'),$newname);
+//         if($move){
+//         $profilepicture=Students::where('student_id',$req->student_id)->update([
+//             'profilepicture'=>$newname
+//         ]);
+
+//         if($profilepicture){
+//          return json_encode([
+//             'status'=>'200',
+//             'msg'=>'Profile picture uploaded successfully'
+//         ]);
+//         }
+//         else{
+//             return json_encode([
+//             'status'=>'201',
+//             'msg'=>'Something went wrong, try again!'
+//         ]);
+//         }
+
+//         }
+//         else{
+//             return json_encode('failed to move');
+//         }
+//         }
+// return json_encode($req->file('image'));
+// }
+
+public function studentprofilepicture(Request $request)
+{
+    $request->validate([
+        'student_id' => 'required|exists:students_table,student_id',
+        'image' => 'required|image|mimes:jpg,jpeg,png,webp|max:2048'
+    ]);
+
+    try {
+
+        $student = Students::findOrFail($request->student_id);
+
+        //Delete previous image
+
+
+        if (!empty($student->cloudinary_public_id)) {
+
+            Cloudinary::destroy(
+                $student->cloudinary_public_id
+            );
 
         }
-        else{
-            return json_encode('failed to move');
-        }
-        }
-return json_encode($req->file('image'));
+
+         // upload new image
+        $uploaded = Cloudinary::upload(
+            $request->file('image')->getRealPath(),
+            [
+                'folder' => 'students/profilepictures',
+
+                'transformation' => [
+                    'width' => 300,
+                    'height' => 300,
+                    'crop' => 'fill',
+                    'gravity' => 'face',
+                    'quality' => 'auto'
+                ]
+            ]
+        );
+
+         // save to database
+        $student->profilepicture = $uploaded->getSecurePath();
+
+        $student->cloudinary_public_id = $uploaded->getPublicId();
+
+        $student->save();
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Profile picture uploaded successfully.',
+            'image_url' => $student->profilepicture
+        ], 200);
+
+    } catch (\Exception $e) {
+
+        return response()->json([
+            'status' => false,
+            'message' => $e->getMessage()
+        ], 500);
+
+    }
 }
 
 public function dashboard(){
