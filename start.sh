@@ -12,6 +12,8 @@ chmod -R 775 storage bootstrap/cache
 
 php artisan optimize:clear
 
+php artisan package:discover
+
 php artisan config:cache
 
 php artisan migrate --force
