@@ -325,22 +325,23 @@ return response()->json([
         ]);
     }
 }
-public function getcurrentstudent(Request $req){
-     $student=Students::where('student_id',$req->id)->first();
-     if($student){
+public function getcurrentstudent(Request $req)
+{
+    $student=Students::find($req->id);
+    if(!$student){
         return response()->json([
-            'status' => 200,
-            'student'=>$student
+            'status' => false,
+            'message'=>'Student not found'
 
-        ]);
-     }
-     else{
-        return response()->json([
-            'status' => 201,
-            'msg'=>'Not found'
+        ], 404);
+    }
 
-        ]);
-     }
+    return response()->json([
+        'status' => true,
+        'msg'=>$student
+
+    ], 200);
+
 }
 public function passwordupdate(Request $req){
       $token=Students::where('emailverify',$req->token)->first();
