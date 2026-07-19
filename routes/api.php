@@ -54,7 +54,7 @@ Route::post('/allfollowers',[FollowerController::class,'allfollowers']);
 Route::post('/allfollowing',[FollowerController::class,'allfollowing']);
 Route::post('/post',[PostController::class,'createpost']);
 Route::get('/allposts',[PostController::class,'allposts']);
-Route::post('/allfollowing',[PostController::class,'allfollowing']);
+// Route::post('/allfollowing',[PostController::class,'allfollowing']);
 Route::post('/comment',[CommentController::class,'comment']);
 Route::post('/studentprofilepicture',[StudentsController::class,'studentprofilepicture']);
 Route::post('/like',[LikesController::class,'like']);
