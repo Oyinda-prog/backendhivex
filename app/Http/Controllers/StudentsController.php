@@ -335,8 +335,8 @@ public function studentprofilepicture(Request $request)
                 'folder' => 'students/profilepictures',
 
                 'transformation' => [
-                    'width' => 300,
-                    'height' => 300,
+                    'width' => 400,
+                    'height' => 400,
                     'crop' => 'fill',
                     'gravity' => 'auto',
                     'quality' => 'auto'
