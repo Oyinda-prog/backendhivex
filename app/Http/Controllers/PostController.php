@@ -34,7 +34,7 @@ class PostController extends Controller
          return json_encode([
             'status'=>200,
             'msg'=>'Post created successfully'
-        ]);   
+        ]);
         }
         else{
             return json_encode([
@@ -42,7 +42,7 @@ class PostController extends Controller
             'msg'=>'Something went wrong, try again!'
         ]);
         }
-    
+
         }
         else{
              return json_encode([
@@ -60,7 +60,7 @@ class PostController extends Controller
          return json_encode([
             'status'=>206,
             'msg'=>'Post created successfully'
-        ]);   
+        ]);
         }
         else{
             return json_encode([
@@ -69,9 +69,9 @@ class PostController extends Controller
         ]);
         }
 
-            
+
         }
-        // 
+        //
     }
 
 public function mypost(Request $req){
@@ -88,7 +88,7 @@ $allposts=Posts::where('student_id',$req->student_id)->with(['student','likes','
             'msg'=>'No posts found yet, create posts'
         ]);
     }
-  
+
 }
 
 public function allposts(){
@@ -99,29 +99,29 @@ return json_encode([
                'post'=>$allpost
            ]);
 }
-public function allfollowing(Request $req){
-    $resp=[];
-    $all=Followers::where('follower_id',$req->userid)->where('status','follow')->get();
-    foreach ($all as $id) {
-        $resp[]=$id->following_id;
-    }
-   
- $allposts=Posts::whereIn('student_id',$resp)->with(['student','likes','comments','comments.student','comments.replies','comments.replies.student','followers'])->get();
-    if($allposts->count()>0){
+// public function allfollowing(Request $req){
+//     $resp=[];
+//     $all=Followers::where('follower_id',$req->userid)->where('status','follow')->get();
+//     foreach ($all as $id) {
+//         $resp[]=$id->following_id;
+//     }
 
-        return json_encode([
-               'status'=>'200',
-               'post'=>$allposts
-           ]);
-    }
-    else{
-         return json_encode([
-            'status'=>'201',
-            'msg'=>'No posts found yet'
-        ]);
-    }
-   
-}
+//  $allposts=Posts::whereIn('student_id',$resp)->with(['student','likes','comments','comments.student','comments.replies','comments.replies.student','followers'])->get();
+//     if($allposts->count()>0){
+
+//         return json_encode([
+//                'status'=>'200',
+//                'post'=>$allposts
+//            ]);
+//     }
+//     else{
+//          return json_encode([
+//             'status'=>'201',
+//             'msg'=>'No posts found yet'
+//         ]);
+//     }
+
+// }
 
 
 public function allfriends(Request $req){
@@ -129,13 +129,13 @@ public function allfriends(Request $req){
     $all=Followers::where('follower_id',$req->userid)->where('status','follow')->get();
     foreach ($all as $id) {
         $resp[]=$id->following_id;
-        
+
     }
-   
-    
+
+
  $allfriends=Students::whereIn('student_id',$resp)->get();
     if($allfriends->count()>0){
-    
+
         return json_encode([
                'status'=>'200',
                'friends'=>$allfriends
