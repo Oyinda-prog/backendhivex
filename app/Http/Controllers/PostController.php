@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Followers;
 use App\Models\Posts;
 use App\Models\Students;
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -18,61 +19,58 @@ class PostController extends Controller
 //     }
 // }
 
-    public function createpost(Request $req){
-        if($req->hasFile('image') && $req->content){
+    public function createpost(Request $req)
+{
+    $req->validate([
+        'student_id' => 'required',
+        'content' => 'nullable|string',
+        'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:4096'
+    ]);
 
-        $newname=time().$req->file('image')->getClientOriginalName();
-        $move=$req->file('image')->move(public_path('postimages'),$newname);
-        if($move){
-        $createpost=new Posts;
-        $createpost->student_id=$req->student_id;
-        $createpost->content=$req->content;
-        $createpost->post_img=$newname;
+    try {
 
-        $save=$createpost->save();
-        if($save){
-         return json_encode([
-            'status'=>200,
-            'msg'=>'Post created successfully'
-        ]);
-        }
-        else{
-            return json_encode([
-            'status'=>202,
-            'msg'=>'Something went wrong, try again!'
-        ]);
+        if (!$req->content && !$req->hasFile('image')) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Please enter content or select an image.'
+            ], 422);
         }
 
-        }
-        else{
-             return json_encode([
-            'status'=>204,
-            'msg'=>'Something went wrong, try again!'
-        ]);
-        }
-        }
-        else if($req->content && !$req->file('image')){
-            $createpost=new Posts;
-        $createpost->student_id=$req->student_id;
-        $createpost->content=$req->content;
-        $save=$createpost->save();
-        if($save){
-         return json_encode([
-            'status'=>206,
-            'msg'=>'Post created successfully'
-        ]);
-        }
-        else{
-            return json_encode([
-            'status'=>208,
-            'msg'=>'Something went wrong, try again!'
-        ]);
+        $createpost = new Posts();
+
+        $createpost->student_id = $req->student_id;
+        $createpost->content = $req->content;
+
+        if ($req->hasFile('image')) {
+
+            $uploaded = Cloudinary::upload(
+                $req->file('image')->getRealPath(),
+                [
+                    'folder' => 'posts/images'
+                ]
+            );
+
+            $createpost->post_img = $uploaded->getSecurePath();
         }
 
+        $createpost->save();
 
-        }
-        //
+        return response()->json([
+            'status' => true,
+            'message' => 'Post created successfully',
+            'post' => $createpost
+        ], 200);
+
+    } catch (\Exception $e) {
+
+        return response()->json([
+            'status' => false,
+            'message' => $e->getMessage(),
+            'file' => $e->getFile(),
+            'line' => $e->getLine()
+        ], 500);
     }
+}
 
 public function mypost(Request $req){
 $allposts=Posts::where('student_id',$req->student_id)->with(['student','likes','comments','comments.student','comments.replies','comments.replies.student'])->get();
