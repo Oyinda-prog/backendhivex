@@ -122,29 +122,17 @@ return json_encode([
 // }
 
 
-public function allfriends(Request $req){
-    $resp=[];
-    $all=Followers::where('follower_id',$req->userid)->where('status','follow')->get();
-    foreach ($all as $id) {
-        $resp[]=$id->following_id;
+public function allfriends(Request $req)
+{
+    $followerIds = Followers::where('following_id', $req->userid)
+        ->pluck('follower_id');
 
-    }
+    $followers = Students::whereIn('student_id', $followerIds)->get();
 
-
- $allfriends=Students::whereIn('student_id',$resp)->get();
-    if($allfriends->count()>0){
-
-        return json_encode([
-               'status'=>'200',
-               'friends'=>$allfriends
-           ]);
-    }
-    else{
-         return json_encode([
-            'status'=>'201',
-            'msg'=>'No friends found yet'
-        ]);
-    }
+    return response()->json([
+        'status' => true,
+        'followers' => $followers
+    ]);
 }
 
 
