@@ -46,13 +46,21 @@ class FollowerController extends Controller
     ]);
 }
 
-    public function allfollowing(Request $req)
-{
-    $following = Followers::where('follower_id', $req->student_id)->get();
+//     public function allfollowing(Request $req)
+// {
+//     $following = Followers::where('follower_id', $req->student_id)->get();
 
+//     return response()->json([
+//         'status' => true,
+//         'following' => $following
+//     ]);
+// }
+
+public function allfollowing(Request $req)
+{
     return response()->json([
         'status' => true,
-        'following' => $following
+        'message' => 'allfollowing reached'
     ]);
 }
 
