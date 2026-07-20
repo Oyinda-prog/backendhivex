@@ -133,7 +133,7 @@ public function allfriends(int $id)
 
     return response()->json([
         'status' => true,
-        'followers' => $followers
+        'friends' => $followers
     ]);
     } catch (\Exception $e) {
         return response()->json([
