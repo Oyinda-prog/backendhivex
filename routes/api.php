@@ -40,7 +40,7 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-Route::post('/allfriends',[PostController::class,'allfriends']);
+Route::get('/allfriends/{id}',[PostController::class,'allfriends']);
 Route::post('/signup',[PersonController::class,'signup']);
 Route::post('/createstudent',[StudentsController::class,'createstudent']);
 Route::get('/getcurrentstudent/{id}',[StudentsController::class,'getcurrentstudent']);

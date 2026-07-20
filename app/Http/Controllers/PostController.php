@@ -122,9 +122,11 @@ return json_encode([
 // }
 
 
-public function allfriends(Request $req)
+public function allfriends(int $id)
 {
-    $followerIds = Followers::where('following_id', $req->userid)
+
+    try {
+        $followerIds = Followers::where('following_id', $id)
         ->pluck('follower_id');
 
     $followers = Students::whereIn('student_id', $followerIds)->get();
@@ -133,6 +135,14 @@ public function allfriends(Request $req)
         'status' => true,
         'followers' => $followers
     ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'status' => false,
+            'message' => $e->getMessage(),
+            'file' => $e->getFile(),
+            'line' => $e->getLine()
+        ], 500);
+    }
 }
 
 
