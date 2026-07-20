@@ -13,14 +13,14 @@ class CreateRepliesTable extends Migration
      */
     public function up()
     {
-        // Schema::create('replies', function (Blueprint $table) {
-        //     $table->id();
-        //     $table->integer('comment_id');
-        //     $table->integer('student_id');
-        //     $table->integer('post_id');
-        //     $table->longText('comment');
-        //     $table->timestamps();
-        // });
+        Schema::create('replies', function (Blueprint $table) {
+            $table->id();
+            $table->integer('comment_id');
+            $table->integer('student_id');
+            $table->integer('post_id');
+            $table->longText('comment');
+            $table->timestamps();
+        });
     }
 
     /**

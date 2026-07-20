@@ -27,10 +27,7 @@ class CreateStudentsTable extends Migration
      *
      * @return void
      */
-    //public function down()
-   // {
-      //  Schema::dropIfExists('students');
-    //}
+   
     public function up()
 {
     Schema::create('students_table', function (Blueprint $table) {
@@ -39,6 +36,8 @@ class CreateStudentsTable extends Migration
         $table->string('email', 100)->unique();
         $table->string('password');
         $table->string('phonenumber');
+        $table->text('profilepicture')->nullable();
+        $table->string('cloudinary_public_id')->nullable();
         $table->timestamps();
     });
 }

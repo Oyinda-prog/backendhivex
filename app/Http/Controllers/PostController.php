@@ -72,19 +72,30 @@ class PostController extends Controller
     }
 }
 
-public function mypost(Request $req){
-$allposts=Posts::where('student_id',$req->student_id)->with(['student','likes','comments','comments.student','comments.replies','comments.replies.student'])->get();
-    if($allposts->count()>0){
-        return json_encode([
+public function mypost(int $id){
+// $allposts=Posts::where('student_id',$id)->with(['student','likes','comments','comments.student','comments.replies','comments.replies.student'])->get();
+$myposts = Posts::where('student_id', $id)->with(['student'])->get();
+    try {
+        if ($myposts->count()>0){
+            return response()->json([
                'status'=>200,
-               'post'=>$allposts
-           ]);
-    }
-    else{
-         return json_encode([
+               'post'=>$myposts
+            ]);
+        }
+
+        return response()->json([
             'status'=>201,
             'msg'=>'No posts found yet, create posts'
         ]);
+
+    } catch (\Exception $e) {
+        return response()->json([
+        'message' => $e->getMessage(),
+        'file' => $e->getFile(),
+        'line' => $e->getLine(),
+    ], 500);
+
+
     }
 
 }
