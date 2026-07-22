@@ -17,6 +17,7 @@ class CreateGroupsTable extends Migration
             $table->increments('group_id');
             $table->string('uniquenumber',120)->unique();
             $table->string('name',120);
+            $table->string('privacy',120)->nullable();
             $table->integer('student_id');
             $table->timestamps();
         });

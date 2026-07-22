@@ -10,7 +10,8 @@ class Group extends Model
 {
     use HasFactory;
     protected $primaryKey='group_id';
-    protected $fillable=['student_id','uniquenumber'];
+    protected $fillable=['name, privacy, student_id','uniquenumber'];
+
     public function grouppost(){
         return $this->hasMany(GroupPost::class,'uniquenumber','uniquenumber');
     }
