@@ -69,6 +69,6 @@ Route::post('/unlike',[LikesController::class,'unlike']);
   Route::post('/grouppostinvite',[GroupPostInvite::class,'grouppostinvite']);
   Route::post('/getinvite',[GroupPostInvite::class,'getinvite']);
   Route::post('/acceptinvite',[GroupPostInvite::class,'acceptinvite']);
-  Route::post('/getallgroups',[GroupController::class,'getallgroups']);
+  Route::get('/getallgroups/{id}',[GroupController::class,'getallgroups']);
 
 

@@ -47,21 +47,35 @@ return response()->json([
      );
    }
  }
-  public function getallgroups(Request $req){
-    $allgroups=Group::where('student_id',$req->student_id)->get();
- if($allgroups->count()>0){
-return json_encode([
-            'status'=>200,
-            'msg'=>'Invitations found!',
-            'allgroups'=>$allgroups
-        ]);
- }
- else{
-    return json_encode([
-            'status'=>201,
-            'msg'=>'No invitation yet!',
 
-        ]);
- }
+  public function getallgroups(int $id){
+    try {
+        $allgroups = Group::where('student_id', $id)->get();
+        if ($allgroups->isEmpty()){
+            return response()->json(
+               [
+                  'status'=> false,
+                  'message'=> 'No groups created yet!'
+               ], 200
+            );
+        }
+
+        return response()->json(
+            [
+                'status'=> true,
+                'message'=> 'Group found!',
+                'allgroups' => $allgroups
+            ], 200
+        );
+    } catch (\Exception $e) {
+        return response()->json(
+            [
+                'file'=>$e->getFile(),
+                'line'=>$e->getLine(),
+                'message'=>$e->getMessage(),
+            ], 500
+        );
+    }
+
   }
 }
