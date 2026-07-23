@@ -63,7 +63,7 @@ Route::post('/unlike',[LikesController::class,'unlike']);
  Route::post('/reply', [ReplyController::class, 'reply']);
   Route::get('/mypost/{id}', [PostController::class, 'mypost']);
   Route::post('/creategroup',[GroupController::class,'creategroup']);
-  Route::post('/getgroup/{uniquenumber}',[GroupController::class,'getgroup']);
+  Route::get('/getgroup/{uniquenumber}',[GroupController::class,'getgroup']);
   Route::post('/creategrouppost',[GroupPost::class,'creategrouppost']);
   Route::post('/getgrouppost',[GroupPost::class,'getgrouppost']);
   Route::post('/grouppostinvite',[GroupPostInvite::class,'grouppostinvite']);
