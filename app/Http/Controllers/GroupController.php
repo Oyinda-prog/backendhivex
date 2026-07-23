@@ -14,12 +14,20 @@ class GroupController extends Controller
     $group->uniquenumber = $request->uniquenumber;
     $group->name = $request->groupname;
     $group->privacy = $request->privacy;
+   $save = $group->save();
+    if ($save) {
+        return response()->json([
+            'status' => true,
+            'message' => 'Group created successfully',
+            'group' => $group,
+        ], 200);
+    }
 
-    return response()->json([
-        'status' => true,
-        'message' => 'Group created successfully',
-        'group' => $group,
-    ],200);
+     return response()->json([
+            'status' => false,
+            'message' => 'Unable to create group',
+        ], 400);
+
 
     } catch (\Exception $e) {
        return response()->json(
