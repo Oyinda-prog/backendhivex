@@ -28,7 +28,7 @@ class Students extends Model
         return $this->hasMany(Posts::class,'student_id', 'student_id');
     }
     public function followers(){
-        return $this->hasMany(Followers::class,'student_id', 'student_id');
+        return $this->hasMany(Followers::class,'following_id', 'student_id');
     }
     public function following()
     {

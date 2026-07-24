@@ -479,7 +479,8 @@ public function dashboards(Request $request){
 
 public function getsummary(int $id){
 try {
-    $summary = Students::with(['posts', 'followers'])->where('student_id', $id)-> first();
+    $summary = Students::with(['posts', 'followers.follower',
+    'following.following'])->where('student_id', $id)-> first();
     if ($summary){
         return response()->json(
             [
