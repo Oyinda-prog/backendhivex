@@ -482,13 +482,7 @@ try {
     $summary = Students::with(['posts', 'followers.follower',
     'following.following'])->where('student_id', $id)-> first();
     if ($summary){
-        return response()->json(
-            [
-               'status' => true,
-               'message' => 'Summary found',
-               'summary' =>$summary
-            ],
-            200
+        return response()->json( $summary,200
         );
     }
 
