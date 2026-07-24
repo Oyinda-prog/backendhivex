@@ -30,21 +30,36 @@ public function allstudentsnotes(){
 
 
 public function createbio(Request $req){
-$update=Students::where('student_id',$req->student_id)->update([
-    'bio'=>$req->bio
-   ]);
-   if($update){
-     return json_encode([
-            'status'=>200,
-            'msg'=>'Bio Created'
-        ]);
-   }
-else{
+try {
+    $update = Students::where('student_id', $req->student_id)->update([
+        "bio" => $req->bio
+    ]);
 
-    return json_encode([
-               'status'=>201,
-               'msg'=>'Something went wrong, try again!'
-           ]);
+    if ($update){
+        $student = Students::findOrfail($req->student_id);
+       return response()->json(
+           [
+             'status' => true,
+             'message' => "Bio updated successfully",
+             'student' =>$student
+           ], 200
+        );
+    }
+
+     return response()->json(
+           [
+             'status' => false,
+             'message' => "Bio update failed"
+           ], 400
+        );
+
+
+} catch (\Exception $e) {
+        return response()->json([
+            'message' => $e->getMessage(),
+            'file' => $e->getFile(),
+            'line' => $e->getLine(),
+        ], 500);
 }
 
 }
@@ -455,7 +470,7 @@ public function allstudents(){
     $notes=keepnote::with('student')->get();
     return $notes;
 }
-public function allnotes($id){
+public function allnotes(int $id){
     $student=Students::where('student_id',$id)->first();
     return view('students.allnotes',[
         'allnotes'=>$student->keepnotes
