@@ -65,21 +65,36 @@ try {
 }
 
 public function editname(Request $req){
-$update=Students::where('student_id',$req->student_id)->update([
-    'fullname'=>$req->fullname
-   ]);
-   if($update){
-     return json_encode([
-            'status'=>200,
-            'msg'=>'Name updated'
-        ]);
-   }
-else{
+try {
+    $update = Students::where('student_id', $req->student_id)->update([
+        "fullname" => $req->fullname
+    ]);
 
-    return json_encode([
-               'status'=>201,
-               'msg'=>'Something went wrong, try again!'
-           ]);
+    if ($update){
+        $student = Students::findOrfail($req->student_id);
+       return response()->json(
+           [
+             'status' => true,
+             'message' => "Full Name updated successfully",
+             'student' =>$student
+           ], 200
+        );
+    }
+
+     return response()->json(
+           [
+             'status' => false,
+             'message' => "Full Name update failed"
+           ], 400
+        );
+
+
+} catch (\Exception $e) {
+        return response()->json([
+            'message' => $e->getMessage(),
+            'file' => $e->getFile(),
+            'line' => $e->getLine(),
+        ], 500);
 }
 
 }
