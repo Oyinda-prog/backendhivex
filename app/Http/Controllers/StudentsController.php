@@ -461,7 +461,7 @@ public function allnotes($id){
         'allnotes'=>$student->keepnotes
     ]);
 }
-public function notestudent($id){
+public function notestudent(int $id){
     $note=keepnote::with('student')->where('student_id',$id)->get();
     return view('students.notestudent',[
         'notestudent'=>$note
@@ -475,6 +475,39 @@ public function dashboards(Request $request){
         'message' => 'Welcome!',
         'user' => $studentId,
     ]);
+}
+
+public function getsummary(int $id){
+try {
+    $summary = Students::with(['posts', 'followers'])->where('student_id', $id)-> first();
+    if ($summary){
+        return response()->json(
+            [
+               'status' => true,
+               'message' => 'Summary found',
+               'summary' =>$summary
+            ],
+            200
+        );
+    }
+
+    return response()->json(
+            [
+               'status' => false,
+               'message' => 'Summary not found',
+
+            ],
+            404
+        );
+} catch (\Exception $e) {
+    return response()->json(
+        [
+            'message' => $e->getMessage(),
+            'line' => $e->getLine(),
+            'file' => $e->getFile()
+        ], 500
+    );
+}
 }
 }
 

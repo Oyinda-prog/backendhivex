@@ -25,10 +25,14 @@ class Students extends Model
         return $this->hasMany(keepnote::class,'student_id');
     }
     public function posts(){
-        return $this->hasMany(Posts::class,'student_id');
+        return $this->hasMany(Posts::class,'student_id', 'student_id');
     }
     public function followers(){
-        return $this->hasMany(Followers::class,'follower_id');
+        return $this->hasMany(Followers::class,'student_id', 'student_id');
+    }
+    public function following()
+    {
+        return $this->hasMany(Followers::class, 'follower_id', 'student_id');
     }
     // public function comments(){
     //     return $this->hasMany(Comments::class,'student_id');

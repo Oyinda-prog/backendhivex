@@ -17,16 +17,12 @@ class Followers extends Model
     ];
 
     public function student(){
-        return $this->belongsTo(Students::class,'follower_id');
-    }
-
-    public function post(){
-        return $this->belongsToMany(Posts::class,'follower_id');
+        return $this->belongsTo(Students::class,'student_id', 'student_id');
     }
 
     public function follower()
     {
-        return $this->belongsTo(Students::class, 'follower_id');
+        return $this->belongsTo(Students::class, 'follower_id', 'student_id');
     }
 
     public function following()

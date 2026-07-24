@@ -27,7 +27,7 @@ class CreateStudentsTable extends Migration
      *
      * @return void
      */
-   
+
     public function up()
 {
     Schema::create('students_table', function (Blueprint $table) {
@@ -37,6 +37,7 @@ class CreateStudentsTable extends Migration
         $table->string('password');
         $table->string('phonenumber');
         $table->text('profilepicture')->nullable();
+        $table->text('bio')->nullable();
         $table->string('cloudinary_public_id')->nullable();
         $table->timestamps();
     });
